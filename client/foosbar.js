@@ -12,7 +12,7 @@ if (Meteor.isClient) {
   }
 
   Template.newscore.locations = function () {
-    return ['Boston', 'Cambridge'];
+    return ['Boston, MA', 'Cambridge, MA'];
   }
 }
 
