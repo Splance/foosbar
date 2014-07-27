@@ -15,7 +15,7 @@ html, body {
 
 
 .new_score { margin: 10px 30px;}
-.new_score input, .new_score select { font-weight: bold; text-align: center; background-color: yellow; min-height: 20px;}
+.new_score input, .new_score select { font-weight: bold; text-align: center; background-color: whitesmoke; min-height: 20px;}
 /* table shell */
 .new_score table { width: 330px; border: 1px solid crimson; border-collapse: collapse;}
 .new_score table tr:first-child::before {}

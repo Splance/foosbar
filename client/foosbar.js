@@ -7,3 +7,9 @@ if (Meteor.isClient) {
     return new Date().toString().substring(16, 21);
   }
 }
+
+if (Meteor.isServer) {
+  Meteor.startup(function () {
+    // code to run on server at startup
+  });
+}
