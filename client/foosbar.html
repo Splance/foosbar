@@ -51,15 +51,17 @@
 		  	<td>Location</td>
 		  	<td>
 		  		<select>
-		  			<option>Boston</option>
-		  			<option>Cambridge</option>
+		  			{{#each locations}}
+		  			<option>{{this}}</option>
+		  			{{/each}}
 		  		</select><br/>
 		  		<label>Town</label>
 		  	</td>
 		  	<td>
 		  		<select>
-		  			<option>Bar default</option>
-		  			<option>Other bar</option>
+		  			{{#each arenas}}
+		  			<option>{{this}}</option>
+		  			{{/each}}
 		  		</select><br/>
 		  		<label>Bar</label>
 		  	</td>

@@ -6,6 +6,14 @@ if (Meteor.isClient) {
   Template.newscore.now = function () {
     return new Date().toString().substring(16, 21);
   }
+
+  Template.newscore.arenas = function () {
+    return ['Default Bar', 'Other Bar'];
+  }
+
+  Template.newscore.locations = function () {
+    return ['Boston', 'Cambridge'];
+  }
 }
 
 if (Meteor.isServer) {
