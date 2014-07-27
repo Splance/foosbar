@@ -48,22 +48,12 @@
 		  	</td>
 		  </tr>
 		  <tr>
-		  	<td>Location</td>
+		  	<td>Bar</td>
 		  	<td>
-		  		<select>
-		  			{{#each locations}}
-		  			<option>{{this}}</option>
-		  			{{/each}}
-		  		</select><br/>
-		  		<label>Town</label>
+	  			{{> towns}}
 		  	</td>
 		  	<td>
-		  		<select>
-		  			{{#each arenas}}
-		  			<option>{{this}}</option>
-		  			{{/each}}
-		  		</select><br/>
-		  		<label>Bar</label>
+		  		{{> arenas}}
 		  	</td>
 		  </tr>
 	  	<tr>
@@ -73,6 +63,33 @@
   </form>
 </template>
 
+<template name="towns">
+	{{#if loading}}
+		<span>Loading...</span>
+	{{else}}
+		<select>
+			{{#each towns}}
+				<option value="{{_id}}">{{name}}</option>
+			{{/each}}
+		</select>
+		<br/>
+		<label>Town</label>
+	{{/if}}
+</template>
+
+<template name="arenas">
+	{{#if loading}}
+		<span>Waiting...</span>
+	{{else}}
+		<select>
+			{{#each arenas}}
+			<option value="{{_id}}">{{name}}</option>
+			{{/each}}
+		</select>
+		<br/>
+		<label>Arena</label>
+	{{/if}}
+</template>
 
 <template name="oldscore">
   <table class="old_score">
