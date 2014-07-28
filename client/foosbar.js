@@ -6,7 +6,7 @@ if (Meteor.isClient) {
 
   // ID of currently selected town
   Session.setDefault('town_id', null);
-  // Green light for code changes
+  // Green light for data changes
   Session.set('go_ahead', false);
 
   // Subscribe to 'towns' collection on startup.
@@ -62,9 +62,11 @@ if (Meteor.isClient) {
   //// New Score ////
   Template.newscore.events({
     'submit form.new_score': function (evt){
-      if(Meteor.newScore){
+      evt.preventDefault();
+      var score = validateScoreForm();
+      if(score != false){
         Session.set('go_ahead', true);
-        submitNewScore(Meteor.newScore);
+        submitNewScore(score);
         return true;
       }
       return false;
@@ -76,11 +78,8 @@ if (Meteor.isClient) {
       if (res != false){
         submitButton.disabled = !yep;
         submitButton.style.setProperty("opacity", yep ? 1 : .3);
-        Meteor.newScore = res;
       }
-      else{
-        evt.target.checked = false;
-      }
+      else evt.target.checked = false;
     },
     'change form.new_score': function (evt) {
       if (evt.target.name != "approved"){
@@ -117,22 +116,24 @@ if (Meteor.isClient) {
       }
       else{
         invalidLabel(scores[i].name, false);
-        items[scores[i].name] = scores[0].value;
+        items[scores[i].name] = scores[i].value;
       }
     };
 
     // date & time
     var date = $('.new_score input[type="date"]')[0];
-    var time = $('.new_score input[type="time"]')[0];
-    if (date && date.value && time && time.value){
-      if (new Date(date.value) > new Date()){
+    var time = $('.new_score input[name="time"]')[0];
+    if (date && date.value && time && time.valueAsDate){
+      var day = date.value+" 00:00:00";
+      if (new Date(day) > new Date()){
         invalidLabel('date', true);
         return false;
       }
-      else{
-        invalidLabel('date', false);
-      }
-      var played = new Date(date.value+"T"+time.value);
+      else invalidLabel('date', false);
+      
+      var played = new Date(day);
+      var t = time.valueAsDate;
+      played.setHours(t.getUTCHours(), t.getMinutes());
       if (played > new Date()){
         invalidLabel('time', true);
         return false;
@@ -172,20 +173,23 @@ if (Meteor.isClient) {
     }
   }
 
-  function submitNewScore(){
-    var data = Meteor.newScore;
-    if(Session.get('go_ahead') == true){
-      data.created = new Date();
-      Scores.insert(data, function(err){
-        console.log(err);
-        if(err){
-          alert("The score could not be added.");
-        }
-        else{
-          Session.set('go_ahead', false);
-          Meteor.newScore = null;
-        }
-      });
+  function submitNewScore(score){
+    var data = score;
+    if(Session.equals('go_ahead', true)){
+      data.user_id = Meteor.userId();
+      if (!data.user_id) {
+        alert("You must be signed in to achieve this action.");
+      }
+      else {
+        Scores.insert(data, function(err){
+          if(err){
+            alert(err.reason + ": The score could not be added.");
+          }
+          else{
+            Session.set('go_ahead', false);
+          }
+        });
+      }
     }
   }
 }

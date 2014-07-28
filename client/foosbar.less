@@ -1,0 +1,121 @@
+/* CSS declarations go here */
+html, body {
+  font-family: monospace;
+  color: #333;
+  width: 400px;
+}
+
+@primary_color: crimson;
+@secondary_color: pink;
+@tertiary_color: #DDD;
+@inset_color: whitesmoke;
+
+@side_pane_size: 380px;
+
+#mixins {
+  .my_side_pane { width: @side_pane_size; margin: 15px 10px;}
+  .my_side_table { table-layout: fixed; border-collapse: collapse;}
+}
+
+.container > div { clear: both; margin: 0 auto;}
+
+label.invalid {color: red;}
+
+.brand > div { display: inline-block; }
+.brand {
+  #mixins .my_side_pane;
+  height: 30px;
+  
+  .logo {
+    padding: 0px;
+    h1 {
+      margin: 0px;
+      border: 1px solid @primary_color;
+      display: inline-block;
+      padding-right: 3px;
+      font-weight: normal;
+      &:first-letter {
+        background-color: @primary_color;
+        padding: 0 3px 0 5px;
+        margin-right: 1px;
+        color: @inset_color;
+      }
+    }
+  }
+  .login {
+    float: right;
+    text-align: right;
+    margin-top: 9px;
+  }
+}
+
+form.new_score {
+  #mixins .my_side_pane;
+  table-layout: fixed;
+  
+  input, select {
+    font-weight: bold;
+    text-align: center;
+    background-color: @inset_color;
+    min-height: 20px;
+  }
+  
+  select { width: 99%;}
+  
+  table {
+    #mixins .my_side_table;
+    border: 1px solid @primary_color;
+    tr {
+      td {
+        @first: 80px;
+        text-align: center;
+        border-bottom: 1px dotted pink;
+        width: (@side_pane_size - @first)/2;
+        &:first-child {
+          text-align: left;
+          width: @first;
+          font-family: fantasy;
+          padding: 20px 5px;
+        }
+      }
+      &:last-child td {
+        border-bottom: none;
+        background-color: @primary_color;
+        color: @inset_color;
+        padding: 7px;
+        text-align: right;
+      }
+    }
+  }
+}
+
+
+table.old_scores {
+  #mixins .my_side_pane;
+  #mixins .my_side_table;
+  border: 1px solid #DDD;
+  text-align: center;
+  
+  thead {
+    @first: 160px; @dash: 20px;
+    th {
+      &:first-child { text-align: left; width: @first;}
+      &:nth-child(3) { width: @dash; color: @primary_color;}
+      &.team {
+        width: (@side_pane_size - @first - @dash)/2;
+        border-bottom: 1px solid @primary_color;
+        padding: 5px 0;
+      }
+    }
+  }
+  tbody {
+    td {
+      border-bottom: 1px solid pink;
+      &:first-child { text-align: left; padding: 10px 5px;}
+      &.empty { padding: 20px;}
+    }
+  }
+  
+  tfoot td { color: @primary_color; text-align: right;}
+}
+
