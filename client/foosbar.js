@@ -24,7 +24,6 @@ if (Meteor.isClient) {
       arenasHandle = null;
   });
 
-
   //// Towns ////
   Template.towns.loading = function () {
     return !townsHandle.ready();
@@ -32,6 +31,11 @@ if (Meteor.isClient) {
   Template.towns.towns = function () {
     return Towns.find({}, {sort: {name: 1}});
   };
+  Template.towns.events({
+    'change .town': function (evt) {
+      Session.set('town_id', evt.currentTarget.value);
+    }
+  });
 
   //// Arenas ////
   Template.arenas.loading = function () {

@@ -67,7 +67,7 @@
 	{{#if loading}}
 		<span>Loading...</span>
 	{{else}}
-		<select>
+		<select class="town">
 			{{#each towns}}
 				<option value="{{_id}}">{{name}}</option>
 			{{/each}}
@@ -81,11 +81,19 @@
 	{{#if loading}}
 		<span>Waiting...</span>
 	{{else}}
-		<select>
-			{{#each arenas}}
-			<option value="{{_id}}">{{name}}</option>
-			{{/each}}
-		</select>
+		{{#with arenas}}
+			{{#if count}}
+				<select required>
+					{{#each this}}
+						<option value="{{_id}}">{{name}}</option>
+					{{/each}}
+				</select>
+			{{else}}
+				<select disabled required>
+					<option disabled>No arena found</option>
+				</select>
+			{{/if}}
+		{{/with}}
 		<br/>
 		<label>Arena</label>
 	{{/if}}
