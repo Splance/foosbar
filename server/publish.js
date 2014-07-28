@@ -8,6 +8,7 @@ if (Meteor.isServer) {
 	});
 
 	// Arenas -- {name: String,
+  //            town_id: String,
 	//						yelp_biz: String,
 	// 						visits: Number}
 	Arenas = new Meteor.Collection("arenas");
@@ -17,4 +18,21 @@ if (Meteor.isServer) {
 	  return Arenas.find({town_id: town_id});
 	});
   
+  // Scores -- {played: Date,
+  //            home: Number,
+  //            visitor: Number,
+  //            arena_id: String}
+  Scores = new Meteor.Collection("scores");
+  Meteor.publish("scores", function () {
+  	return Scores.find();
+  });
+
+  Scores.allow({
+    'insert': function (userId,doc) {
+      /* user and doc checks ,
+      return true to allow insert */
+      return true; 
+    }
+  });
+
 }

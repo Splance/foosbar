@@ -8,7 +8,7 @@
 		<br/>
 		{{> newscore}}
 		<br/>
-		{{> oldscore}}
+		{{> oldscores}}
 	</div>
 </body>
 
@@ -29,22 +29,22 @@
 		  <tr>
 		  	<td>Score</td>
 		  	<td colspan="2">
-		  		<label>Home</label>
-		  		<input type="number" value="0" min="0" max="20" required>
+		  		<label class="home">Home</label>
+		  		<input name="home" type="number" value="0" min="0" max="20" required>
 		  		<span>-</span>
-		  		<input type="number"  value="0" min="0" max="20" required>
-		  		<label>Visitor</label>
+		  		<input name="visitor" type="number"  value="0" min="0" max="20" required>
+		  		<label class="visitor">Visitor</label>
 		  	</td>
 		  </tr>
 		  <tr>
 		  	<td>Date</td>
 		  	<td>
-		  		<input type="date" value="{{today}}" max="{{today}}" placeholder="{{today}}" required><br/>
-		  		<label>Day</label>
+		  		<input name="date" type="date" value="{{today}}" max="{{today}}" placeholder="{{today}}" required><br/>
+		  		<label class="date">Day</label>
 		  	</td>
 		  	<td>
-		  		<input type="time" value="{{now}}" placeholder="{{now}}" required><br/>
-		  		<label>Time</label>
+		  		<input name="time" type="time" value="{{now}}" placeholder="{{now}}" required><br/>
+		  		<label class="time">Time</label>
 		  	</td>
 		  </tr>
 		  <tr>
@@ -57,7 +57,9 @@
 		  	</td>
 		  </tr>
 	  	<tr>
-	  		<td colspan="3"><input type="submit" value="New Score"></td>
+        <td colspan="3">
+          <label>Check <input type="checkbox" name="approved"> to validate</label>
+          <input type="submit" value="New Score" style="opacity: .3" disabled></td>
 	  	</tr>
   	</table>
   </form>
@@ -67,13 +69,21 @@
 	{{#if loading}}
 		<span>Loading...</span>
 	{{else}}
-		<select class="town">
-			{{#each towns}}
-				<option value="{{_id}}">{{name}}</option>
-			{{/each}}
-		</select>
+    {{#with towns}}
+      {{#if count}}
+    		<select name="town" class="town">
+    			{{#each this}}
+    				<option value="{{_id}}">{{name}}</option>
+    			{{/each}}
+        </select>
+      {{else}}
+        <select name="town" disabled required>
+          <option value="" disabled>No town found</option>
+        </select>
+      {{/if}}
+    {{/with}}
 		<br/>
-		<label>Town</label>
+		<label class="town">Town</label>
 	{{/if}}
 </template>
 
@@ -83,36 +93,60 @@
 	{{else}}
 		{{#with arenas}}
 			{{#if count}}
-				<select required>
+				<select name="arena" required>
+          <option value="" disabled selected>Select Arena</option>
 					{{#each this}}
 						<option value="{{_id}}">{{name}}</option>
 					{{/each}}
 				</select>
 			{{else}}
-				<select disabled required>
-					<option disabled>No arena found</option>
+				<select name="arena" required>
+					<option value="" disabled>No arena here</option>
 				</select>
 			{{/if}}
 		{{/with}}
 		<br/>
-		<label>Arena</label>
+		<label class="arena">Arena</label>
 	{{/if}}
 </template>
 
-<template name="oldscore">
-  <table class="old_score">
+<template name="oldscores">
+  <table class="old_scores" cellpadding="0" cellspacing="0">
   	<thead>
-  		<th>Home</th>
+      <th></th>
+  		<th class="team">Home</th>
   		<th>-</th>
-  		<th>Visitor</th>
+  		<th class="team">Visitor</th>
   	</thead>
   	<tbody>
-  		<!-- Load score here -->
-  		<td></td>
+  		{{> scores }}
   	</tbody>
   	<tfoot>
-  		<td colspan=""></td>
+  		<td colspan="4">Cheers!</td>
   	</tfoot>
   </table>
 </template>
 
+<template name="scores">
+  {{#if loading}}
+    <tr><td colspan="4">Loading scores...</td></tr>
+  {{else}}
+    {{#with scores}}
+      {{#if count}}
+        {{#each this}}
+          <tr>
+            <td>{{played}}<br/>{{arena_id}}</td>
+            <td>{{home}}</td>
+            <td>-</td>
+            <td>{{visitor}}</td>
+          </tr>
+        {{/each}}
+      {{else}}
+        <tr>
+          <td></td>
+          <td colspan="3" class="empty">Post new scores!</td>
+        </tr>
+      {{/if}}
+    {{/with}}
+  {{/if}}
+</template>

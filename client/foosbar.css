@@ -7,18 +7,20 @@ html, body {
 
 .container > div { clear: both; margin: 0 auto;}
 
+label.invalid {color: red;}
 
 .brand { text-align: left; width: 100%; display: inline-block;}
 .brand > div { display: inline-block; }
 .brand .logo { padding: 0px; margin: 0 10px; text-align: left;}
+.brand .logo h1 { border: 1px solid crimson; padding-right: 3px; font-weight: normal;}
+.brand .logo h1:first-letter { background-color: crimson; color: white; padding: 0 3px 0 5px; margin-right: 1px;}
 .brand .login { width: 60%; text-align: right;}
 
 
 .new_score { margin: 10px 30px;}
 .new_score input, .new_score select { font-weight: bold; text-align: center; background-color: whitesmoke; min-height: 20px;}
 /* table shell */
-.new_score table { width: 330px; border: 1px solid crimson; border-collapse: collapse;}
-.new_score table tr:first-child::before {}
+.new_score table { width: 350px; border: 1px solid crimson; border-collapse: collapse;}
 /* table trickery */
 .new_score table tr td { border-bottom: 1px dotted pink; text-align: center;}
 .new_score table tr td:first-child { text-align: left; font-family: fantasy; width: 100px; padding: 20px 5px; } 
@@ -26,6 +28,18 @@ html, body {
 .new_score table tr:last-child td { border-bottom: none; background-color: crimson; padding: 7px; text-align: right; }
 
 
-table.oldscore thead { }
-table.oldscore tbody { }
-table.oldscore tfoot { }
+.old_scores {width: 350px; border-collapse: collapse; border: 1px solid #DDD; margin: 10px 30px;}
+
+.old_scores thead { text-align: center;}
+.old_scores thead th:first-child { width: 115px; }
+.old_scores thead th:nth-child(3) { width: 15px; color:  crimson;}
+.old_scores thead th.team { width: 100px; border-bottom: 1px solid crimson; padding: 5px 10px;}
+
+.old_scores tbody { text-align: center;}
+.old_scores tbody td { border-bottom: 1px solid pink;}
+.old_scores tbody td:first-child {text-align: left; padding: 10px 5px; }
+.old_scores tbody td:nth-child(3) { width: 15px;}
+.old_scores tbody td.empty { padding: 20px; text-align: center; }
+
+.old_scores tfoot td { color: crimson; text-align: right;}
+
