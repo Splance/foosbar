@@ -37,6 +37,14 @@ if (Meteor.isServer) {
       }
       else return false;
     },
+    'update': function(userId, docs, fields, modifier) {
+      for(var i=0; i<docs.length; i++){
+        if (docs[i].user_id != userId) {
+          return false;
+        }
+      }
+      return true;
+    },
     'remove': function(userId, docs) {
       for(var i=0; i<docs.length; i++ ){
         if (docs[i].user_id != userId) {
