@@ -58,6 +58,25 @@ if (Meteor.isClient) {
   Template.scores.scores = function () {
     return Scores.find({}, {sort: {added: 1}});
   };
+  Template.scores.dateView = function (date) {
+    if (_.isDate(date)) {
+      return {
+        day: date.toLocaleDateString(),
+        time: date.toLocaleTimeString()
+      };
+    }
+    else return {day: "Some date", time: "some point"};
+  };
+  Template.scores.arenaInfo = function (arena_id) {
+    var arena = Arenas.findOne(arena_id);
+    return {
+      name: (arena ? arena.name : "Unknown"),
+      link: arena ? ("http://yelp.com/biz/" + arena.yelp_biz) : ""
+    }
+  };
+  Template.scores.addVictory = function (t1, t2) {
+    return (t1 > t2) ? "victory" : "";
+  }
 
   //// New Score ////
   Template.newscore.events({

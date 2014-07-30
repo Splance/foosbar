@@ -138,9 +138,13 @@ table.old_scores {
   }
   tbody {
     td {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       border-bottom: 1px solid pink;
       &:first-child { text-align: left; padding: 10px 5px;}
       &.empty { padding: 20px;}
+      &.victory { font-size: 2.5em}
     }
   }
   

@@ -137,10 +137,23 @@
       {{#if count}}
         {{#each this}}
           <tr>
-            <td>{{played}}<br/>{{arena_id}}</td>
-            <td class="large">{{home}}</td>
+            <td>
+              {{#with arenaInfo arena_id}}
+                <span>
+                  <b>At:</b>
+                  <a href="{{link}}" title="{{name}}" target="_blank">{{name}}</a>
+                </span>
+              {{/with}}
+              <br/>
+              {{#with dateView played}}
+                <span><b>Day:</b> {{day}}</span> 
+                <br/>
+                <span><b>Time:</b> {{time}}</span>
+              {{/with}}
+            </td>
+            <td class="large {{addVictory home visitor}}">{{home}}</td>
             <td>-</td>
-            <td class="large">{{visitor}}</td>
+            <td class="large {{addVictory visitor home}}">{{visitor}}</td>
           </tr>
         {{/each}}
       {{else}}
