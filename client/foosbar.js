@@ -7,7 +7,7 @@ if (Meteor.isClient) {
   // ID of currently selected town
   Session.setDefault('town_id', null);
   // Green light for data changes
-  Session.set('go_ahead', false);
+  Session.setDefault('go_ahead', false);
 
   // Subscribe to 'towns' collection on startup.
   // Select a list once data has arrived.
@@ -66,39 +66,48 @@ if (Meteor.isClient) {
       var score = validateScoreForm();
       if(score != false){
         Session.set('go_ahead', true);
-        submitNewScore(score);
-        return true;
+        if (submitNewScore(score)) {
+          toggleSubmitButton(false);
+          $("form.new_score")[0].reset();
+        }
       }
       return false;
     },
     'change input[name=approved]': function (evt) {
-      var submitButton = $("form.new_score input[type=submit]")[0];
-      var yep = evt.currentTarget.checked;
-      var res = validateScoreForm();
-      if (res != false){
-        submitButton.disabled = !yep;
-        submitButton.style.setProperty("opacity", yep ? 1 : .3);
-      }
+      if (evt.target.checked && (validateScoreForm() != false))
+        toggleSubmitButton(true);
       else evt.target.checked = false;
     },
     'change form.new_score': function (evt) {
       if (evt.target.name != "approved"){
         var checker = $('.new_score input[name=approved]');
-        if (checker[0].checked)
-          checker.trigger('click');
+        if (checker[0].checked) {
+          checker[0].checked = false;
+          toggleSubmitButton(false);
+        }
       }
     }
   });
 
   //// Extras ////
   // code some event/interaction stuff here
-  Template.newscore.today = function () {
+  function newDateInputValue() {
     return new Date(new Date().toLocaleDateString()).toISOString().substring(0, 10);
   }
+  Template.newscore.today = function () {
+    return newDateInputValue();
+  }
+  function newTimeInputValue() {return new Date().toString().substring(16, 21);}
   Template.newscore.now = function () {
-    return new Date().toString().substring(16, 21);
+    return newTimeInputValue();
   }
 
+  function toggleSubmitButton(toggle){
+    var submitButton = $("form.new_score input[type=submit]")[0];
+    submitButton.disabled = !toggle;
+    submitButton.style.setProperty("opacity", toggle ? 1 : .3);
+  }
+  
   function validateScoreForm(){
     var items = {
       home: null,
@@ -106,13 +115,14 @@ if (Meteor.isClient) {
       played: null,
       arena_id: null
     }
+    var valid = true;
 
     // scores
     var scores = $('.new_score input[type="number"]');
     for (var i = scores.length - 1; i >= 0; i--) {
       if(!scores[i].value || scores[i].value < 0){
         invalidLabel(scores[i].name, true);
-        return false;
+        valid = false;
       }
       else{
         invalidLabel(scores[i].name, false);
@@ -127,7 +137,7 @@ if (Meteor.isClient) {
       var day = date.value+" 00:00:00";
       if (new Date(day) > new Date()){
         invalidLabel('date', true);
-        return false;
+        valid = false;
       }
       else invalidLabel('date', false);
       
@@ -136,14 +146,17 @@ if (Meteor.isClient) {
       played.setHours(t.getUTCHours(), t.getMinutes());
       if (played > new Date()){
         invalidLabel('time', true);
-        return false;
+        valid = false;
       }
       else{
         invalidLabel('time', false);
         items.played = played;
+        // point next reset on last time check
+        date.defaultValue = newDateInputValue();
+        time.defaultValue = newTimeInputValue();
       }
     }
-    else return false;
+    else valid = false;
 
     // arena
     var arena = $('.new_score select[name="arena"]')[0];
@@ -153,10 +166,10 @@ if (Meteor.isClient) {
     }
     else {
       invalidLabel('arena', true);
-      return false;
+      valid = false;
     }
 
-    return items;
+    return valid && items;
   }
 
   function invalidLabel(class_name, invalid) {
@@ -175,21 +188,26 @@ if (Meteor.isClient) {
 
   function submitNewScore(score){
     var data = score;
+    var submitted = false;
     if(Session.equals('go_ahead', true)){
       data.user_id = Meteor.userId();
       if (!data.user_id) {
         alert("You must be signed in to achieve this action.");
+        submitted = false;
       }
       else {
         Scores.insert(data, function(err){
           if(err){
             alert(err.reason + ": The score could not be added.");
+            submitted = false;
           }
           else{
             Session.set('go_ahead', false);
+            submitted = true;
           }
         });
       }
+      return submitted;
     }
   }
 }
