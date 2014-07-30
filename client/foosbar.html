@@ -56,7 +56,7 @@
       </tr>
       <tr>
         <td colspan="3">
-          <label>Check <input type="checkbox" name="approved"> to validate</label>
+          <label class="no_select">Check <input type="checkbox" name="approved"> to validate</label>
           <input type="submit" value="New Score" style="opacity: .3" disabled></td>
       </tr>
     </table>
@@ -138,9 +138,9 @@
         {{#each this}}
           <tr>
             <td>{{played}}<br/>{{arena_id}}</td>
-            <td>{{home}}</td>
+            <td class="large">{{home}}</td>
             <td>-</td>
-            <td>{{visitor}}</td>
+            <td class="large">{{visitor}}</td>
           </tr>
         {{/each}}
       {{else}}

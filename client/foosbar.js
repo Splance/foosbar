@@ -66,7 +66,8 @@ if (Meteor.isClient) {
       var score = validateScoreForm();
       if(score != false){
         Session.set('go_ahead', true);
-        if (submitNewScore(score)) {
+        var submitted = submitNewScore(score);
+        if (submitted) {
           toggleSubmitButton(false);
           $("form.new_score")[0].reset();
         }
@@ -74,9 +75,9 @@ if (Meteor.isClient) {
       return false;
     },
     'change input[name=approved]': function (evt) {
-      if (evt.target.checked && (validateScoreForm() != false))
-        toggleSubmitButton(true);
-      else evt.target.checked = false;
+      var toggle = evt.target.checked && (validateScoreForm() != false);
+      toggleSubmitButton(toggle);
+      evt.target.checked = toggle;
     },
     'change form.new_score': function (evt) {
       if (evt.target.name != "approved"){
@@ -192,20 +193,15 @@ if (Meteor.isClient) {
     if(Session.equals('go_ahead', true)){
       data.user_id = Meteor.userId();
       if (!data.user_id) {
-        alert("You must be signed in to achieve this action.");
+        alert("You must be signed in to perform this action.");
         submitted = false;
       }
       else {
-        Scores.insert(data, function(err){
-          if(err){
-            alert(err.reason + ": The score could not be added.");
-            submitted = false;
-          }
-          else{
-            Session.set('go_ahead', false);
-            submitted = true;
-          }
+        var new_id = Scores.insert(data, function(err){
+          if(err) alert(err.reason + ": The score could not be added.");
+          else Session.set('go_ahead', false);
         });
+        submitted = (typeof new_id !== 'undefined');
       }
       return submitted;
     }
