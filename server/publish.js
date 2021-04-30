@@ -30,7 +30,7 @@ if (Meteor.isServer) {
 
   Scores.allow({
     'insert': function (userId, doc) {
-      if(userId && userId == doc.user_id){
+      if(userId && userId === doc.user_id){
         doc.created = new Date();
         doc.owner = userId;
         return true;
